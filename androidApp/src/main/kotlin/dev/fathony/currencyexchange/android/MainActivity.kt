@@ -1,4 +1,4 @@
-package dev.fathony.currencyexchange.android
+package dev.fathony.currencyexchange.android.dev.fathony.currencyexchange.android
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import dev.fathony.currencyexchange.android.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
