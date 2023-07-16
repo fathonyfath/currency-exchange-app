@@ -1,17 +1,19 @@
-@file:Suppress("UNUSED_VARIABLE")
+@file:Suppress("UNUSED_VARIABLE", "UnstableApiUsage")
 
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     kotlin("plugin.serialization")
     id("com.android.library")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.nativeCoroutines)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     targetHierarchy.default()
 
-    android {
+    androidTarget {
         compilations.all {
             kotlinOptions {
                 jvmTarget = "1.8"
@@ -31,9 +33,13 @@ kotlin {
         framework {
             baseName = "shared"
         }
+        pod("KMPNativeCoroutinesAsync", "1.0.0-ALPHA-13")
     }
-    
+
     sourceSets {
+        all {
+            languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
+        }
         val commonMain by getting {
             dependencies {
                 implementation(libs.ktor.client.core)
@@ -72,5 +78,10 @@ android {
     compileSdk = 33
     defaultConfig {
         minSdk = 21
+    }
+    sourceSets {
+        getByName("main") {
+            manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        }
     }
 }

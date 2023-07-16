@@ -1,12 +1,14 @@
 [versions]
+kotlin = "1.9.0"
+ksp = "1.9.0-1.0.11"
 agp = "8.0.2"
-kotlin = "1.8.21"
 ktor = "2.3.2"
 kotlinx-coroutines = "1.7.2"
 kotlinx-serialization = "1.5.1"
 kotlinx-dateTime = "0.4.0"
 bigNum = "0.3.8"
 kotlinResult = "1.1.18"
+nativeCoroutines = "1.0.0-ALPHA-13"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -22,3 +24,6 @@ kotlinResult = { module = "com.michael-bull.kotlin-result:kotlin-result", versio
 
 [bundles]
 
+[plugins]
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+nativeCoroutines = { id = "com.rickclephas.kmp.nativecoroutines", version.ref = "nativeCoroutines" }
