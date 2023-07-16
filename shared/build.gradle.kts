@@ -1,19 +1,19 @@
 @file:Suppress("UNUSED_VARIABLE", "UnstableApiUsage")
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-    kotlin("plugin.serialization")
-    id("com.android.library")
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.nativeCoroutines)
+    alias(commonLibs.plugins.kotlin.multiplatform)
+    alias(commonLibs.plugins.kotlin.native.cocoapods)
+    alias(commonLibs.plugins.kotlin.plugin.serialization)
+    alias(commonLibs.plugins.agp.library)
+    alias(commonLibs.plugins.ksp)
+    alias(commonLibs.plugins.nativeCoroutines)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     targetHierarchy.default()
 
-    androidTarget {
+    android {
         compilations.all {
             kotlinOptions {
                 jvmTarget = "1.8"
@@ -42,14 +42,14 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.contentNegotiation)
-                implementation(libs.ktor.serialization.kotlinx.json)
-                implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.dateTime)
-                implementation(libs.bigNum)
-                implementation(libs.kotlinResult)
+                implementation(commonLibs.ktor.client.core)
+                implementation(commonLibs.ktor.client.contentNegotiation)
+                implementation(commonLibs.ktor.serialization.kotlinx.json)
+                implementation(commonLibs.kotlinx.coroutines.core)
+                implementation(commonLibs.kotlinx.serialization.json)
+                implementation(commonLibs.kotlinx.dateTime)
+                implementation(commonLibs.bigNum)
+                implementation(commonLibs.kotlinResult)
             }
         }
         val commonTest by getting {
@@ -59,14 +59,14 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(libs.ktor.client.okhttp)
+                implementation(commonLibs.ktor.client.okhttp)
             }
         }
         val androidUnitTest by getting
         val androidInstrumentedTest by getting
         val iosMain by getting {
             dependencies {
-                implementation(libs.ktor.client.darwin)
+                implementation(commonLibs.ktor.client.darwin)
             }
         }
         val iosTest by getting

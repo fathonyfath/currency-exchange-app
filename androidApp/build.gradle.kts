@@ -1,6 +1,8 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(commonLibs.plugins.agp.application)
+    alias(commonLibs.plugins.kotlin.android)
 }
 
 android {
@@ -17,7 +19,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.7"
+        kotlinCompilerExtensionVersion = androidLibs.versions.compose.compiler.get()
     }
     packaging {
         resources {
@@ -40,10 +42,6 @@ android {
 
 dependencies {
     implementation(project(":shared"))
-    implementation("androidx.compose.ui:ui:1.4.3")
-    implementation("androidx.compose.ui:ui-tooling:1.4.3")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
-    implementation("androidx.compose.foundation:foundation:1.4.3")
-    implementation("androidx.compose.material:material:1.4.3")
-    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation(androidLibs.bundles.compose.runtime)
+    implementation(androidLibs.androidx.activity.compose)
 }

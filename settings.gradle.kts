@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 pluginManagement {
     repositories {
         google()
@@ -7,12 +9,20 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
+    versionCatalogs {
+        create("commonLibs") {
+            from(files("gradle/commonLibs.versions.toml"))
+        }
+        create("androidLibs") {
+            from(files("gradle/androidLibs.versions.toml"))
+        }
+    }
     repositories {
         google()
         mavenCentral()
     }
 }
 
-rootProject.name = "Currency_Exchange"
+rootProject.name = "Currency Exchange"
 include(":androidApp")
 include(":shared")

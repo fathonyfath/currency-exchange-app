@@ -1,0 +1,23 @@
+[versions]
+compose-compiler = "1.4.8"
+compose-runtime = "1.4.3"
+androidx-activity-compose = "1.7.2"
+
+[libraries]
+compose-runtime-ui = { module = "androidx.compose.ui:ui", version.ref = "compose-runtime" }
+compose-runtime-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-runtime" }
+compose-runtime-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-runtime" }
+compose-runtime-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose-runtime" }
+compose-runtime-material = { module = "androidx.compose.material:material", version.ref = "compose-runtime" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
+
+[bundles]
+compose-runtime = [
+    "compose-runtime-ui",
+    "compose-runtime-ui-tooling",
+    "compose-runtime-ui-tooling-preview",
+    "compose-runtime-foundation",
+    "compose-runtime-material",
+]
+
+[plugins]
