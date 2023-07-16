@@ -1,0 +1,26 @@
+CREATE TABLE rate (
+    from_code TEXT NOT NULL,
+    to_code TEXT NOT NULL,
+    rate REAL NOT NULL,
+    date TEXT NOT NULL,
+    FOREIGN KEY (from_code) REFERENCES country (code),
+    FOREIGN KEY (to_code) REFERENCES country (code)
+ );
+
+CREATE INDEX rate_from_code ON rate(from_code);
+CREATE INDEX rate_to_code ON rate(to_code);
+
+upsert {
+    UPDATE rate
+    SET rate = :rate, date = :date
+    WHERE from_code = :fromCountryCode AND to_code = :toCountryCode;
+
+    INSERT OR IGNORE INTO rate (from_code, to_code, rate, date)
+    VALUES (:fromCountryCode, :toCountryCode, :rate, :date);
+}
+
+selectAllRatesForCountry:
+SELECT * FROM rate WHERE from_code = :fromCode;
+
+selectRateForCountryToCountry:
+SELECT * FROM rate WHERE from_code = :fromCode AND to_code = :toCode;

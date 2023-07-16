@@ -4,9 +4,9 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import dev.fathony.currencyexchange.sqldelight.Database
 
-actual class DriverFactory {
+internal actual class DriverFactory {
 
     actual fun createDriver(): SqlDriver {
-        return NativeSqliteDriver(Database.Schema, "test.db")
+        return NativeSqliteDriver(Database.Schema, DatabaseName)
     }
 }
