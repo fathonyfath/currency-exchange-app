@@ -1,13 +1,20 @@
 package dev.fathony.currencyexchange.android
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.michaelbull.result.fold
+import dev.fathony.currencyexchange.api.CurrencyExchangeApi
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +27,19 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App() {
+    val api = remember { CurrencyExchangeApi() }
+
+    LaunchedEffect(Unit) {
+        api.getCurrencies().fold(
+            success = { currencies ->
+                Log.d("MainActivity", "currencies: ${currencies.values}")
+            },
+            failure = { exception ->
+                Log.d("MainActivity", "currencies: exception: $exception")
+            }
+        )
+    }
+
     MyApplicationTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),

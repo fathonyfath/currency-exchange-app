@@ -47,9 +47,9 @@ kotlin {
                 implementation(commonLibs.ktor.serialization.kotlinx.json)
                 implementation(commonLibs.kotlinx.coroutines.core)
                 implementation(commonLibs.kotlinx.serialization.json)
-                implementation(commonLibs.kotlinx.dateTime)
-                implementation(commonLibs.bigNum)
-                implementation(commonLibs.kotlinResult)
+                api(commonLibs.kotlinx.dateTime)
+                api(commonLibs.bigNum)
+                api(commonLibs.kotlinResult)
             }
         }
         val commonTest by getting {
