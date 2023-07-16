@@ -7,6 +7,7 @@ plugins {
     alias(commonLibs.plugins.agp.library)
     alias(commonLibs.plugins.ksp)
     alias(commonLibs.plugins.nativeCoroutines)
+    alias(commonLibs.plugins.sqlDelight)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -33,7 +34,7 @@ kotlin {
         framework {
             baseName = "shared"
         }
-        pod("KMPNativeCoroutinesAsync", "1.0.0-ALPHA-13")
+        pod("KMPNativeCoroutinesAsync", commonLibs.versions.nativeCoroutines.get())
     }
 
     sourceSets {
@@ -60,6 +61,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(commonLibs.ktor.client.okhttp)
+                implementation(commonLibs.sqlDelight.androidDriver)
             }
         }
         val androidUnitTest by getting
@@ -67,6 +69,7 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation(commonLibs.ktor.client.darwin)
+                implementation(commonLibs.sqlDelight.nativeDriver)
             }
         }
         val iosTest by getting
@@ -82,6 +85,14 @@ android {
     sourceSets {
         getByName("main") {
             manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("dev.fathony.currencyexchange.sqldelight")
         }
     }
 }

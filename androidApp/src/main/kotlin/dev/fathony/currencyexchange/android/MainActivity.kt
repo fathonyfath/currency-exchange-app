@@ -12,21 +12,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import com.github.michaelbull.result.fold
 import dev.fathony.currencyexchange.api.CurrencyExchangeApi
+import dev.fathony.currencyexchange.sqldelight.Database
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            App()
+            App((application as MyApplication).getDatabase())
         }
     }
 }
 
 @Composable
-fun App() {
+fun App(database: Database) {
     val api = remember { CurrencyExchangeApi() }
 
     LaunchedEffect(Unit) {
@@ -38,6 +43,15 @@ fun App() {
                 Log.d("MainActivity", "currencies: exception: $exception")
             }
         )
+    }
+
+    LaunchedEffect(Unit) {
+        database.playerQueries.selectAll()
+            .asFlow()
+            .mapToList(Dispatchers.Default)
+            .collectLatest { hockeyPlayer ->
+                Log.d("MainActivity", "hockeyPlayers: $hockeyPlayer")
+            }
     }
 
     MyApplicationTheme {

@@ -10,6 +10,7 @@ bigNum = "0.3.8"
 kotlinResult = "1.1.18"
 nativeCoroutines = "1.0.0-ALPHA-12"
 gradleVersion = "0.47.0"
+sqlDelight = "2.0.0-rc02"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -22,6 +23,8 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-dateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-dateTime" }
 bigNum = { module = "com.ionspin.kotlin:bignum", version.ref = "bigNum" }
 kotlinResult = { module = "com.michael-bull.kotlin-result:kotlin-result", version.ref = "kotlinResult" }
+sqlDelight-androidDriver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelight-nativeDriver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 
 [bundles]
 
@@ -35,3 +38,4 @@ agp-application = { id = "com.android.application", version.ref = "agp" }
 agp-library = { id = "com.android.library", version.ref = "agp" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 nativeCoroutines = { id = "com.rickclephas.kmp.nativecoroutines", version.ref = "nativeCoroutines" }
+sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
