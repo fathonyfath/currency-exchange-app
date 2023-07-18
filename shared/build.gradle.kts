@@ -2,7 +2,6 @@
 
 plugins {
     alias(commonLibs.plugins.kotlin.multiplatform)
-    alias(commonLibs.plugins.kotlin.native.cocoapods)
     alias(commonLibs.plugins.kotlin.plugin.serialization)
     alias(commonLibs.plugins.agp.library)
     alias(commonLibs.plugins.ksp)
@@ -21,20 +20,15 @@ kotlin {
             }
         }
     }
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
 
-    cocoapods {
-        summary = "Some description for the Shared Module"
-        homepage = "Link to the Shared Module homepage"
-        version = "1.0"
-        ios.deploymentTarget = "14.1"
-        podfile = project.file("../iosApp/Podfile")
-        framework {
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach {
+        it.binaries.framework {
             baseName = "shared"
         }
-        pod("KMPNativeCoroutinesAsync", commonLibs.versions.nativeCoroutines.get())
     }
 
     sourceSets {
