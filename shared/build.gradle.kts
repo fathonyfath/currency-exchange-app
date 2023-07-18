@@ -42,6 +42,7 @@ kotlin {
                 implementation(commonLibs.ktor.serialization.kotlinx.json)
                 implementation(commonLibs.kotlinx.coroutines.core)
                 implementation(commonLibs.kotlinx.serialization.json)
+                implementation(commonLibs.multiplatformSettings)
                 api(commonLibs.kotlinx.dateTime)
                 api(commonLibs.bigNum)
                 api(commonLibs.kotlinResult)
