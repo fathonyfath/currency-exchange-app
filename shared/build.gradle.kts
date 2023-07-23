@@ -53,6 +53,8 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(commonLibs.kotlinx.coroutines.test)
+                implementation(commonLibs.turbine)
             }
         }
         val androidMain by getting {

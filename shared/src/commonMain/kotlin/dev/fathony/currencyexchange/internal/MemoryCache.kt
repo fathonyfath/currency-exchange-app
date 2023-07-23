@@ -29,9 +29,9 @@ internal class MemoryCache {
         currenciesCache.value = currencies
     }
 
-    fun putRates(currency: Currency, rates: Rates) {
+    fun putRates(rates: Rates) {
         val ratesMap = ratesCache.value.toMutableMap()
-        ratesMap[currency] = rates
+        ratesMap[rates.baseCurrency] = rates
         ratesCache.value = ratesMap
     }
 }
