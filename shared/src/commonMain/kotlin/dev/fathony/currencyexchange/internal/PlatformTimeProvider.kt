@@ -5,7 +5,7 @@ import kotlinx.datetime.Instant
 
 internal class PlatformTimeProvider : TimeProvider {
 
-    override fun provideTime(): Instant {
+    override fun provideCurrentTime(): Instant {
         return Clock.System.now()
     }
 }

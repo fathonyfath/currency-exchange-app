@@ -4,5 +4,5 @@ import kotlinx.datetime.Instant
 
 internal interface TimeProvider {
 
-    fun provideTime(): Instant
+    fun provideCurrentTime(): Instant
 }
