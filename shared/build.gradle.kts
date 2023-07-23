@@ -43,6 +43,8 @@ kotlin {
                 implementation(commonLibs.kotlinx.coroutines.core)
                 implementation(commonLibs.kotlinx.serialization.json)
                 implementation(commonLibs.multiplatformSettings)
+                implementation(commonLibs.sqlDelight.coroutinesExtension)
+                implementation(commonLibs.kermit)
                 api(commonLibs.kotlinx.dateTime)
                 api(commonLibs.bigNum)
                 api(commonLibs.kotlinResult)

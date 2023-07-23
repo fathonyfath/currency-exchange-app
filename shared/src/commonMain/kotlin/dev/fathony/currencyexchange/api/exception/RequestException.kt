@@ -1,3 +1,3 @@
 package dev.fathony.currencyexchange.api.exception
 
-sealed class RequestException : Throwable()
+internal sealed class RequestException : Throwable()

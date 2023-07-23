@@ -1,12 +1,12 @@
 package dev.fathony.currencyexchange
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.SharedPreferencesSettings
 import dev.fathony.currencyexchange.db.DriverFactory
+import dev.fathony.currencyexchange.internal.PlatformTimeProvider
 import dev.fathony.currencyexchange.internal.SettingsName
+import dev.fathony.currencyexchange.internal.TimeProvider
 import dev.fathony.currencyexchange.sqldelight.Database
 
 actual class PlatformDependencies(context: Context) {
@@ -23,11 +23,19 @@ actual class PlatformDependencies(context: Context) {
         settingsFactory.create(SettingsName)
     }
 
+    private val timeProvider: TimeProvider by lazy(LazyThreadSafetyMode.NONE) {
+        PlatformTimeProvider()
+    }
+
     internal actual fun provideDatabase(): Database {
         return database
     }
 
     internal actual fun provideSettings(): Settings {
         return settings
+    }
+
+    internal actual fun provideTimeProvider(): TimeProvider {
+        return timeProvider
     }
 }

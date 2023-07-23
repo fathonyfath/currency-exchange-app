@@ -12,6 +12,7 @@ nativeCoroutines = "1.0.0-ALPHA-12"
 gradleVersion = "0.47.0"
 sqlDelight = "2.0.0-rc02"
 multiplatformSettings = "1.0.0"
+kermit = "2.0.0-RC5"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -26,7 +27,9 @@ bigNum = { module = "com.ionspin.kotlin:bignum", version.ref = "bigNum" }
 kotlinResult = { module = "com.michael-bull.kotlin-result:kotlin-result", version.ref = "kotlinResult" }
 sqlDelight-androidDriver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
 sqlDelight-nativeDriver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
+sqlDelight-coroutinesExtension = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 [bundles]
 

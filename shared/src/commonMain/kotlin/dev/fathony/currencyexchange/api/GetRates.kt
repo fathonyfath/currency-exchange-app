@@ -3,7 +3,7 @@ package dev.fathony.currencyexchange.api
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.*
 
-class GetRates private constructor(
+internal class GetRates private constructor(
     val countryCode: String,
     val date: LocalDate,
     val rates: List<Rate>

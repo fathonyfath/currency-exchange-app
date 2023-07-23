@@ -1,6 +1,6 @@
 package dev.fathony.currencyexchange.api
 
-class GetCurrencies private constructor(values: Map<String, String>) {
+internal class GetCurrencies private constructor(values: Map<String, String>) {
 
     val values: Map<String, String> = values.toMap()
     val countryCodes = this.values.keys

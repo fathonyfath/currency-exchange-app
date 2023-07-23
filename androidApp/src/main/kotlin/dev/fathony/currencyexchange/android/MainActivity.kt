@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.michaelbull.result.fold
-import dev.fathony.currencyexchange.api.CurrencyExchangeApi
+import dev.fathony.currencyexchange.CurrencyExchange
+import dev.fathony.currencyexchange.PlatformDependencies
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,17 +29,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App() {
-    val api = remember { CurrencyExchangeApi() }
+    val appContext = LocalContext.current.applicationContext
+
+    val currencyExchange = remember {
+        CurrencyExchange(PlatformDependencies(appContext))
+    }
 
     LaunchedEffect(Unit) {
-        api.getCurrencies().fold(
-            success = { currencies ->
-                Log.d("MainActivity", "currencies: ${currencies.values}")
-            },
-            failure = { exception ->
-                Log.d("MainActivity", "currencies: exception: $exception")
+        launch {
+            currencyExchange.getCurrencies().collect { result ->
+                Log.d("MainActivity", "result: $result")
             }
-        )
+        }
     }
 
     MyApplicationTheme {

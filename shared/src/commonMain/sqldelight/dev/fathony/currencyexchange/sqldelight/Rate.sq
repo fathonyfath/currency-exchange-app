@@ -3,8 +3,8 @@ CREATE TABLE rate (
     to_code TEXT NOT NULL,
     rate REAL NOT NULL,
     date TEXT NOT NULL,
-    FOREIGN KEY (from_code) REFERENCES country (code),
-    FOREIGN KEY (to_code) REFERENCES country (code)
+    FOREIGN KEY (from_code) REFERENCES currency (code),
+    FOREIGN KEY (to_code) REFERENCES currency (code)
  );
 
 CREATE INDEX rate_from_code ON rate(from_code);

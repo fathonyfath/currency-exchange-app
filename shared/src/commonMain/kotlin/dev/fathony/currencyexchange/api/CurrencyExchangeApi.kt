@@ -22,7 +22,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
 import kotlinx.serialization.json.JsonElement
 
-class CurrencyExchangeApi {
+internal class CurrencyExchangeApi {
 
     private val client = HttpClient {
         install(ContentNegotiation) {

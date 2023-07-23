@@ -1,0 +1,15 @@
+CREATE TABLE currency (
+    code TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+CREATE INDEX currency_code ON currency(code);
+
+insert:
+INSERT INTO currency (code, name) VALUES (:code, :name);
+
+selectAll:
+SELECT * FROM currency;
+
+deleteAll:
+DELETE FROM currency;
