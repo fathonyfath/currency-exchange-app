@@ -6,6 +6,7 @@ import dev.fathony.currencyexchange.Currencies
 import dev.fathony.currencyexchange.Currency
 import dev.fathony.currencyexchange.Rate
 import dev.fathony.currencyexchange.Rates
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,6 +22,16 @@ class MemoryCacheTest {
             val currencies = awaitItem()
             val countryCodes = currencies.map { it.code }.toSet()
             assertEquals(setOf("idr", "sgd", "jpy", "usd"), countryCodes)
+        }
+    }
+
+    @Test
+    fun testCurrenciesCache_conflated() = runTest {
+        val cache = MemoryCache()
+        cache.putCurrencies(createDummyCurrencies())
+
+        cache.getCurrencies().test {
+            awaitItem()
         }
     }
 
@@ -63,6 +74,16 @@ class MemoryCacheTest {
             val values = awaitItem()
             val distinctAvailableRates = values.map { it.value.targetCurrency.code }.toSet()
             assertEquals(setOf("sgd", "jpy"), distinctAvailableRates)
+        }
+    }
+
+    @Test
+    fun testRatesCache_conflated() = runTest {
+        val cache = MemoryCache()
+        cache.putRates(createRatesForIdr())
+
+        cache.getRatesForCurrency(Currency("idr", "Indonesian rupiah")).test {
+            awaitItem()
         }
     }
 
