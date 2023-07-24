@@ -12,7 +12,7 @@ nativeCoroutines = "1.0.0-ALPHA-12"
 gradleVersion = "0.47.0"
 sqlDelight = "2.0.0-rc02"
 multiplatformSettings = "1.0.0"
-kermit = "2.0.0-RC5"
+kermit = "2.0.0-RC4"
 turbine = "1.0.0"
 
 [libraries]
