@@ -23,6 +23,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Currency Exchange"
+rootProject.name = "CurrencyExchange"
 include(":androidApp")
 include(":shared")

@@ -44,5 +44,4 @@ dependencies {
     implementation(project(":shared"))
     implementation(androidLibs.bundles.compose.runtime)
     implementation(androidLibs.androidx.activity.compose)
-    implementation("app.cash.sqldelight:coroutines-extensions:2.0.0-rc02")
 }
