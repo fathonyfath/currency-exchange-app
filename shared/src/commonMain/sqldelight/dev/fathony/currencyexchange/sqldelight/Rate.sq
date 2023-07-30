@@ -20,7 +20,13 @@ upsert {
 }
 
 selectAllRatesForCountry:
-SELECT * FROM rate WHERE from_code = :fromCode;
+SELECT from_code, to_code, currency_target.name AS to_name, rate, date
+FROM rate
+INNER JOIN currency AS currency_target ON rate.to_code = currency_target.code
+WHERE from_code = :fromCode;
 
 selectRateForCountryToCountry:
-SELECT * FROM rate WHERE from_code = :fromCode AND to_code = :toCode;
+SELECT from_code, to_code, currency_target.name AS to_name, rate, date
+FROM rate
+INNER JOIN currency AS currency_target ON rate.to_code = currency_target.code
+WHERE from_code = :fromCode AND to_code = :toCode;

@@ -2,12 +2,12 @@ package dev.fathony.currencyexchange.internal
 
 import dev.fathony.currencyexchange.Currencies
 import dev.fathony.currencyexchange.Currency
+import dev.fathony.currencyexchange.Rate
 import dev.fathony.currencyexchange.Rates
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
@@ -35,6 +35,14 @@ internal class MemoryCache {
     fun putRates(rates: Rates) {
         val ratesMap = ratesCache.value.toMutableMap()
         ratesMap[rates.baseCurrency] = rates
+        ratesCache.value = ratesMap
+    }
+
+    fun putRate(rate: Rate) {
+        val ratesMap = ratesCache.value.toMutableMap()
+        val rates = ratesMap[rate.baseCurrency].orEmpty().toMutableMap()
+        rates[rate.targetCurrency] = rate
+        ratesMap[rate.baseCurrency] = Rates(rate.baseCurrency, rates.values.toSet())
         ratesCache.value = ratesMap
     }
 }

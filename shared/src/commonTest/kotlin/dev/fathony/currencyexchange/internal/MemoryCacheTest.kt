@@ -6,8 +6,9 @@ import dev.fathony.currencyexchange.Currencies
 import dev.fathony.currencyexchange.Currency
 import dev.fathony.currencyexchange.Rate
 import dev.fathony.currencyexchange.Rates
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -43,7 +44,7 @@ class MemoryCacheTest {
             cache.putCurrencies(createDummyCurrencies())
             awaitItem()
             cache.putCurrencies(createDummyCurrencies())
-            expectNoEvents()
+            awaitItem()
         }
     }
 
@@ -100,6 +101,46 @@ class MemoryCacheTest {
         }
     }
 
+    @Test
+    fun testRateCache_update() = runTest {
+        val cache = MemoryCache()
+
+        cache.getRatesForCurrency(Currency("idr", "Indonesian rupiah")).test {
+            cache.putRates(createRatesForIdr())
+            assertEquals(1, awaitItem().size)
+            cache.putRate(createRateFromIdrToSgd())
+            assertEquals(1, awaitItem().size)
+        }
+    }
+
+    @Test
+    fun testRateCache_insert() = runTest {
+        val cache = MemoryCache()
+
+        cache.getRatesForCurrency(Currency("idr", "Indonesian rupiah")).test {
+            cache.putRates(createRatesForIdr())
+            assertEquals(1, awaitItem().size)
+            cache.putRate(createRateFromIdrToJpy())
+            assertEquals(2, awaitItem().size)
+        }
+    }
+
+    @Test
+    fun testRateCache_noEvent() = runTest {
+        val cache = MemoryCache()
+
+        cache.getRatesForCurrency(Currency("usd", "United States dollar")).test {
+            cache.putRates(createRatesForIdr())
+            expectNoEvents()
+
+            cache.putRate(createRateFromIdrToSgd())
+            expectNoEvents()
+
+            cache.putRate(createRateFromIdrToJpy())
+            expectNoEvents()
+        }
+    }
+
     private fun createDummyCurrencies(): Currencies {
         return Currencies(
             setOf(
@@ -131,7 +172,8 @@ class MemoryCacheTest {
                 Rate(
                     baseCurrency = idrCurrency,
                     targetCurrency = sgdCurrency,
-                    exchangeRate = BigDecimal.fromDouble(0.000088)
+                    exchangeRate = BigDecimal.fromDouble(0.000088),
+                    lastUpdate = LocalDate(2023, Month.APRIL, 1)
                 )
             )
         )
@@ -148,14 +190,38 @@ class MemoryCacheTest {
                 Rate(
                     baseCurrency = idrCurrency,
                     targetCurrency = sgdCurrency,
-                    exchangeRate = BigDecimal.fromDouble(0.000088)
+                    exchangeRate = BigDecimal.fromDouble(0.000088),
+                    lastUpdate = LocalDate(2023, Month.APRIL, 1)
                 ),
                 Rate(
                     baseCurrency = idrCurrency,
                     targetCurrency = jpyCurrency,
-                    exchangeRate = BigDecimal.fromDouble(0.009425)
+                    exchangeRate = BigDecimal.fromDouble(0.009425),
+                    lastUpdate = LocalDate(2023, Month.APRIL, 1)
                 )
             )
+        )
+    }
+
+    private fun createRateFromIdrToSgd(): Rate {
+        val idrCurrency = Currency("idr", "Indonesian rupiah")
+        val sgdCurrency = Currency("sgd", "Singapore dollar")
+        return Rate(
+            baseCurrency = idrCurrency,
+            targetCurrency = sgdCurrency,
+            exchangeRate = BigDecimal.fromDouble(0.000088),
+            lastUpdate = LocalDate(2023, Month.APRIL, 5)
+        )
+    }
+
+    private fun createRateFromIdrToJpy(): Rate {
+        val idrCurrency = Currency("idr", "Indonesian rupiah")
+        val jpyCurrency = Currency("jpy", "Japanese yen")
+        return Rate(
+            baseCurrency = idrCurrency,
+            targetCurrency = jpyCurrency,
+            exchangeRate = BigDecimal.fromDouble(0.009425),
+            lastUpdate = LocalDate(2023, Month.APRIL, 1)
         )
     }
 }
