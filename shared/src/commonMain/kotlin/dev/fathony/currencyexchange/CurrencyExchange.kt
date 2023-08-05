@@ -4,6 +4,7 @@ import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.andThen
+import com.github.michaelbull.result.flatMap
 import com.github.michaelbull.result.get
 import com.github.michaelbull.result.map
 import com.github.michaelbull.result.onFailure
@@ -127,13 +128,12 @@ class CurrencyExchange(dependencies: PlatformDependencies) {
                 database.getRatesForCurrency(DbCurrency(currency.code, currency.name)).first()
             val isEmpty = result is Ok && result.value.isEmpty()
             val isError = result is Err
-            val date = result.get().orEmpty().firstOrNull()?.date
-            val shouldUpdate = if (date != null) {
-                val localDate = LocalDate.parse(date).atStartOfDayIn(TimeZone.UTC)
-                localDate.minus(timeProvider.provideCurrentTime()).inWholeDays >= 1
-            } else {
-                true
-            }
+            val currentTime = timeProvider.provideCurrentTime()
+            val shouldUpdate = result.get().orEmpty()
+                .any { rate ->
+                    val localDate = LocalDate.parse(rate.date).atStartOfDayIn(TimeZone.UTC)
+                    return@any localDate.minus(currentTime).inWholeDays >= 1
+                }
 
             if (isEmpty || isError || shouldUpdate) {
                 val dbRatesResult = api.getRates(currency.code)
@@ -150,7 +150,7 @@ class CurrencyExchange(dependencies: PlatformDependencies) {
 
                 when (dbRatesResult) {
                     is Ok -> {
-                        database.updateRates(dbRatesResult.value).onFailure {
+                        database.updateRates(*dbRatesResult.value.toTypedArray()).onFailure {
                             val currenciesCache = cache.getCurrencies().first()
                             val rates = dbRatesResult.value
                                 .map { dbRate ->
@@ -187,10 +187,125 @@ class CurrencyExchange(dependencies: PlatformDependencies) {
         }
     }
 
+    suspend fun refreshRates(currency: Currency):
+            Result<Unit, Throwable> = withContext(Dispatchers.IO) {
+        return@withContext api.getRates(currency.code)
+            .map { getRates ->
+                return@map getRates.rates.map apiRate@{ rate ->
+                    return@apiRate DbRate(
+                        getRates.countryCode,
+                        rate.countryCode,
+                        rate.rate,
+                        getRates.date.toString()
+                    )
+                }
+            }
+            .map { result ->
+                return@map database.updateRates(*result.toTypedArray()).onFailure {
+                    val currenciesCache = cache.getCurrencies().first()
+                    val rates = result
+                        .map rates@{ dbRate ->
+                            val targetCurrency =
+                                currenciesCache.firstOrNull { it.code == dbRate.to_code }
+
+                            return@rates if (targetCurrency != null) {
+                                Rate(
+                                    currency,
+                                    targetCurrency,
+                                    BigDecimal.fromDouble(dbRate.rate),
+                                    LocalDate.parse(dbRate.date)
+                                )
+                            } else {
+                                null
+                            }
+                        }
+                        .filterNotNull()
+                        .toSet()
+
+                    val newRates = Rates(currency, rates)
+                    cache.putRates(newRates)
+                }
+            }
+            .flatMap { Ok(Unit) }
+    }
+
     fun getRate(from: Currency, target: Currency):
             Flow<Result<Rate, NoCachedDataException>> = channelFlow {
+        launch(Dispatchers.Default) {
+            database.getRateForCurrency(
+                fromCurrency = DbCurrency(from.code, from.name),
+                toCurrency = DbCurrency(target.code, target.name)
+            )
+                .map { it.get() }
+                .filterNotNull()
+                .map { dbRate ->
+                    return@map Rate(
+                        baseCurrency = from,
+                        targetCurrency = target,
+                        exchangeRate = BigDecimal.fromDouble(dbRate.rate),
+                        lastUpdate = LocalDate.parse(dbRate.date)
+                    )
+                }
+                .collect { cache.putRate(it) }
+        }
+        launch {
+            val result = database.getRateForCurrency(
+                fromCurrency = DbCurrency(from.code, from.name),
+                toCurrency = DbCurrency(target.code, target.name)
+            ).first()
 
+            val isError = result is Err
+            val lastUpdate = result.map {
+                LocalDate.parse(it.date).atStartOfDayIn(TimeZone.UTC)
+            }.get()
+            val shouldUpdate = if (lastUpdate != null) {
+                lastUpdate.minus(timeProvider.provideCurrentTime()).inWholeDays >= 1
+            } else {
+                false
+            }
+
+            if (isError || shouldUpdate) {
+                val rateResult = api.getRate(from.code, target.code)
+                    .map { Rate(from, target, BigDecimal.fromDouble(it.rate), it.date) }
+
+                when (rateResult) {
+                    is Ok -> {
+                        val dbRate = DbRate(
+                            from_code = from.code,
+                            to_code = target.code,
+                            rate = rateResult.value.exchangeRate.doubleValue(),
+                            date = rateResult.value.lastUpdate.toString()
+                        )
+                        database.updateRates(dbRate).onFailure {
+                            cache.putRate(rateResult.value)
+                        }
+                    }
+
+                    is Err -> {
+                        if (isError) send(Err(NoCachedDataException()))
+                    }
+                }
+            }
+        }
     }
+
+    suspend fun refreshRate(from: Currency, target: Currency): Result<Unit, Throwable> =
+        withContext(Dispatchers.IO) {
+            return@withContext api.getRate(from.code, target.code)
+                .map { Rate(from, target, BigDecimal.fromDouble(it.rate), it.date) }
+                .map { rate ->
+                    val dbRate = DbRate(
+                        from_code = from.code,
+                        to_code = target.code,
+                        rate = rate.exchangeRate.doubleValue(),
+                        date = rate.lastUpdate.toString()
+                    )
+                    database.updateRates(dbRate).onFailure {
+                        cache.putRate(rate)
+                    }
+                }
+                .flatMap { Ok(Unit) }
+        }
 
     private suspend fun haveToRefreshCurrencies(): Boolean = withContext(Dispatchers.Default) {
         val lastFetchCurrencies = settings.getLastFetchGetCountries() ?: return@withContext true

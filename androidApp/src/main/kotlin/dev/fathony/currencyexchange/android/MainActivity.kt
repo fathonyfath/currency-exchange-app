@@ -20,9 +20,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.fold
+import dev.fathony.currencyexchange.Currencies
 import dev.fathony.currencyexchange.CurrencyExchange
 import dev.fathony.currencyexchange.PlatformDependencies
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -46,9 +52,11 @@ fun App() {
 
     LaunchedEffect(Unit) {
         launch {
-            currencyExchange.getCurrencies().collect { result ->
-                Log.d("MainActivity", "result: $result")
-            }
+            val currencies = currencyExchange.getCurrencies().filterIsInstance<Ok<Currencies>>().first().value
+            val firstCurrency = currencies.random()
+            val secondCurrency = currencies.random()
+
+            currencyExchange.getRate(firstCurrency, secondCurrency).collect()
         }
     }
 

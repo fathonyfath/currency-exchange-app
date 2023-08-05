@@ -2,11 +2,13 @@ package dev.fathony.currencyexchange.db
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.coroutines.mapToOne
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
 import dev.fathony.currencyexchange.sqldelight.Database
 import dev.fathony.currencyexchange.sqldelight.SelectAllRatesForCountry
+import dev.fathony.currencyexchange.sqldelight.SelectRateForCountryToCountry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
@@ -47,7 +49,7 @@ constructor(private val database: Database) {
             }
     }
 
-    suspend fun updateRates(rates: List<DbRate>): Result<Unit, DatabaseException> =
+    suspend fun updateRates(vararg rates: DbRate): Result<Unit, DatabaseException> =
         withContext(Dispatchers.IO) {
             return@withContext try {
                 database.rateQueries.transaction {
@@ -65,4 +67,18 @@ constructor(private val database: Database) {
                 Err(DatabaseException(e))
             }
         }
+
+    fun getRateForCurrency(fromCurrency: DbCurrency, toCurrency: DbCurrency):
+            Flow<Result<SelectRateForCountryToCountry, DatabaseException>> {
+        return database.rateQueries.selectRateForCountryToCountry(
+            fromCurrency.code,
+            toCurrency.code
+        )
+            .asFlow()
+            .mapToOne(Dispatchers.IO)
+            .map { Ok(it) }
+            .catch<Result<SelectRateForCountryToCountry, DatabaseException>> {
+                emit(Err(DatabaseException(it)))
+            }
+    }
 }

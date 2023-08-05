@@ -2,24 +2,24 @@ package dev.fathony.currencyexchange.api
 
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
-import dev.fathony.currencyexchange.api.exception.RequestException
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.get
-import io.ktor.http.URLBuilder
-import io.ktor.http.Url
-import io.ktor.http.appendPathSegments
-import io.ktor.serialization.kotlinx.json.json
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.andThen
 import com.github.michaelbull.result.map
 import com.github.michaelbull.result.mapError
 import com.github.michaelbull.result.runCatching
 import dev.fathony.currencyexchange.api.exception.HttpException
+import dev.fathony.currencyexchange.api.exception.RequestException
 import dev.fathony.currencyexchange.api.exception.WrappedRequestException
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.URLBuilder
+import io.ktor.http.Url
+import io.ktor.http.appendPathSegments
 import io.ktor.http.isSuccess
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.JsonElement
 
 internal class CurrencyExchangeApi {
