@@ -26,3 +26,4 @@ dependencyResolutionManagement {
 rootProject.name = "CurrencyExchange"
 include(":androidApp")
 include(":shared")
+include(":internal:db")

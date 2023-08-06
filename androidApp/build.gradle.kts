@@ -1,8 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    alias(commonLibs.plugins.agp.application)
-    alias(commonLibs.plugins.kotlin.android)
+    aliasNoVersion(commonLibs.plugins.agp.application)
+    aliasNoVersion(commonLibs.plugins.kotlin.android)
 }
 
 android {

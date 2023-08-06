@@ -1,12 +1,12 @@
 @file:Suppress("UNUSED_VARIABLE", "UnstableApiUsage")
 
 plugins {
-    alias(commonLibs.plugins.kotlin.multiplatform)
-    alias(commonLibs.plugins.kotlin.plugin.serialization)
-    alias(commonLibs.plugins.agp.library)
-    alias(commonLibs.plugins.ksp)
-    alias(commonLibs.plugins.nativeCoroutines)
-    alias(commonLibs.plugins.sqlDelight)
+    aliasNoVersion(commonLibs.plugins.kotlin.multiplatform)
+    aliasNoVersion(commonLibs.plugins.kotlin.plugin.serialization)
+    aliasNoVersion(commonLibs.plugins.agp.library)
+    aliasNoVersion(commonLibs.plugins.ksp)
+    aliasNoVersion(commonLibs.plugins.nativeCoroutines)
+    aliasNoVersion(commonLibs.plugins.sqlDelight)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
