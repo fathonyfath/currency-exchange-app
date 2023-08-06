@@ -6,7 +6,6 @@ plugins {
     aliasNoVersion(commonLibs.plugins.agp.library)
     aliasNoVersion(commonLibs.plugins.ksp)
     aliasNoVersion(commonLibs.plugins.nativeCoroutines)
-    aliasNoVersion(commonLibs.plugins.sqlDelight)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -45,6 +44,7 @@ kotlin {
                 implementation(commonLibs.multiplatformSettings)
                 implementation(commonLibs.sqlDelight.coroutinesExtension)
                 implementation(commonLibs.kermit)
+                implementation(project(":internal:db"))
                 api(commonLibs.kotlinx.dateTime)
                 api(commonLibs.bigNum)
                 api(commonLibs.kotlinResult)
@@ -84,14 +84,6 @@ android {
     sourceSets {
         getByName("main") {
             manifest.srcFile("src/androidMain/AndroidManifest.xml")
-        }
-    }
-}
-
-sqldelight {
-    databases {
-        create("Database") {
-            packageName.set("dev.fathony.currencyexchange.sqldelight")
         }
     }
 }

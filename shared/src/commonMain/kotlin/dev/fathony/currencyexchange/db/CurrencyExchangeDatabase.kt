@@ -6,9 +6,9 @@ import app.cash.sqldelight.coroutines.mapToOne
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
-import dev.fathony.currencyexchange.sqldelight.Database
-import dev.fathony.currencyexchange.sqldelight.SelectAllRatesForCountry
-import dev.fathony.currencyexchange.sqldelight.SelectRateForCountryToCountry
+import dev.fathony.currencyexchange.internal.db.sqldelight.Database
+import dev.fathony.currencyexchange.internal.db.sqldelight.SelectAllRatesForCountry
+import dev.fathony.currencyexchange.internal.db.sqldelight.SelectRateForCountryToCountry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow

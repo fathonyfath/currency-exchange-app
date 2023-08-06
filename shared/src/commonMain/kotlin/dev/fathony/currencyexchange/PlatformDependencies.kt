@@ -2,7 +2,7 @@ package dev.fathony.currencyexchange
 
 import com.russhwolf.settings.Settings
 import dev.fathony.currencyexchange.internal.TimeProvider
-import dev.fathony.currencyexchange.sqldelight.Database
+import dev.fathony.currencyexchange.internal.db.sqldelight.Database
 
 expect class PlatformDependencies {
 
