@@ -61,7 +61,6 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(commonLibs.ktor.client.okhttp)
-                implementation(commonLibs.sqlDelight.androidDriver)
             }
         }
         val androidUnitTest by getting
@@ -69,7 +68,6 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation(commonLibs.ktor.client.darwin)
-                implementation(commonLibs.sqlDelight.nativeDriver)
             }
         }
         val iosTest by getting

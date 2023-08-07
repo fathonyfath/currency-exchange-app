@@ -33,6 +33,19 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
+        val androidMain by getting {
+            dependencies {
+                implementation(commonLibs.sqlDelight.androidDriver)
+            }
+        }
+        val androidUnitTest by getting
+        val androidInstrumentedTest by getting
+        val iosMain by getting {
+            dependencies {
+                implementation(commonLibs.sqlDelight.nativeDriver)
+            }
+        }
+        val iosTest by getting
     }
 }
 

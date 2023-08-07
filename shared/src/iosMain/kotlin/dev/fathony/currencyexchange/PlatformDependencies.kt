@@ -2,7 +2,7 @@ package dev.fathony.currencyexchange
 
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.Settings
-import dev.fathony.currencyexchange.db.DriverFactory
+import dev.fathony.currencyexchange.internal.db.DriverFactory
 import dev.fathony.currencyexchange.internal.DatabaseName
 import dev.fathony.currencyexchange.internal.PlatformTimeProvider
 import dev.fathony.currencyexchange.internal.SettingsName

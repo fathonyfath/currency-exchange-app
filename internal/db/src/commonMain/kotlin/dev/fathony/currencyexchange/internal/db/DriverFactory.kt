@@ -1,8 +1,8 @@
-package dev.fathony.currencyexchange.db
+package dev.fathony.currencyexchange.internal.db
 
 import app.cash.sqldelight.db.SqlDriver
 
-internal expect class DriverFactory {
+expect class DriverFactory {
 
     fun createDriver(dbName: String): SqlDriver
 }
