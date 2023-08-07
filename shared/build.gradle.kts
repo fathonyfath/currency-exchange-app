@@ -6,6 +6,7 @@ plugins {
     aliasNoVersion(commonLibs.plugins.agp.library)
     aliasNoVersion(commonLibs.plugins.ksp)
     aliasNoVersion(commonLibs.plugins.nativeCoroutines)
+    aliasNoVersion(commonLibs.plugins.sqlDelight)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
