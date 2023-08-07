@@ -266,18 +266,18 @@ class CurrencyExchange(dependencies: PlatformDependencies) {
 
             if (isError || shouldUpdate) {
                 val rateResult = api.getRate(from.code, target.code)
-                    .map { Rate(from, target, BigDecimal.fromDouble(it.rate), it.date) }
+                    .map { DbRate(from.code, target.code, it.rate, it.date.toString()) }
 
                 when (rateResult) {
                     is Ok -> {
-                        val dbRate = DbRate(
-                            from_code = from.code,
-                            to_code = target.code,
-                            rate = rateResult.value.exchangeRate.doubleValue(),
-                            date = rateResult.value.lastUpdate.toString()
-                        )
-                        database.updateRates(dbRate).onFailure {
-                            cache.putRate(rateResult.value)
+                        database.updateRates(rateResult.value).onFailure {
+                            val date = Rate(
+                                baseCurrency = from,
+                                targetCurrency = target,
+                                exchangeRate = BigDecimal.fromDouble(rateResult.value.rate),
+                                lastUpdate = LocalDate.parse(rateResult.value.date),
+                            )
+                            cache.putRate(date)
                         }
                     }
 
@@ -292,16 +292,16 @@ class CurrencyExchange(dependencies: PlatformDependencies) {
     suspend fun refreshRate(from: Currency, target: Currency): Result<Unit, Throwable> =
         withContext(Dispatchers.IO) {
             return@withContext api.getRate(from.code, target.code)
-                .map { Rate(from, target, BigDecimal.fromDouble(it.rate), it.date) }
+                .map { DbRate(from.code, target.code, it.rate, it.date.toString()) }
                 .map { rate ->
-                    val dbRate = DbRate(
-                        from_code = from.code,
-                        to_code = target.code,
-                        rate = rate.exchangeRate.doubleValue(),
-                        date = rate.lastUpdate.toString()
-                    )
-                    database.updateRates(dbRate).onFailure {
-                        cache.putRate(rate)
+                    database.updateRates(rate).onFailure {
+                        val date = Rate(
+                            baseCurrency = from,
+                            targetCurrency = target,
+                            exchangeRate = BigDecimal.fromDouble(rate.rate),
+                            lastUpdate = LocalDate.parse(rate.date),
+                        )
+                        cache.putRate(date)
                     }
                 }
                 .flatMap { Ok(Unit) }

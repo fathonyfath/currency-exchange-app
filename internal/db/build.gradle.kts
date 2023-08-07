@@ -27,29 +27,12 @@ kotlin {
         all {
             languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
         }
-        val commonMain by getting {
-            dependencies {
-                implementation(commonLibs.sqlDelight.coroutinesExtension)
-            }
-        }
+        val commonMain by getting
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
-        val androidMain by getting {
-            dependencies {
-                implementation(commonLibs.sqlDelight.androidDriver)
-            }
-        }
-        val androidUnitTest by getting
-        val androidInstrumentedTest by getting
-        val iosMain by getting {
-            dependencies {
-                implementation(commonLibs.sqlDelight.nativeDriver)
-            }
-        }
-        val iosTest by getting
     }
 }
 
