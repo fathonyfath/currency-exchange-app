@@ -6,12 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -19,14 +18,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.fold
 import dev.fathony.currencyexchange.Currencies
 import dev.fathony.currencyexchange.CurrencyExchange
 import dev.fathony.currencyexchange.PlatformDependencies
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -52,7 +49,8 @@ fun App() {
 
     LaunchedEffect(Unit) {
         launch {
-            val currencies = currencyExchange.getCurrencies().filterIsInstance<Ok<Currencies>>().first().value
+            val currencies =
+                currencyExchange.getCurrencies().filterIsInstance<Ok<Currencies>>().first().value
             val firstCurrency = currencies.random()
             val secondCurrency = currencies.random()
 
@@ -60,10 +58,10 @@ fun App() {
         }
     }
 
-    MyApplicationTheme {
+    CurrencyExchangeTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            color = MaterialTheme.colorScheme.background,
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,

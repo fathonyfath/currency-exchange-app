@@ -19,7 +19,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = androidLibs.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = androidLibs.versions.androidx.compose.compiler.get()
     }
     packaging {
         resources {
@@ -41,7 +41,8 @@ android {
 }
 
 dependencies {
+    implementation(platform(androidLibs.androidx.compose.bom))
     implementation(project(":shared"))
-    implementation(androidLibs.bundles.compose.runtime)
+    implementation(androidLibs.bundles.androidx.compose.runtime)
     implementation(androidLibs.androidx.activity.compose)
 }
