@@ -53,3 +53,20 @@ Like the other `get` methods, it tries to emit cached data first, followed by an
 This forces a refresh of the conversion rate between two currencies. Success means the new rate is emitted by the `getRate(from, target)` Flow.
 
 Its behavior is consistent with `refreshCurrencies()`: it returns nothing on success, but issues an exception if the refresh fails.
+
+## Building
+
+### Android
+
+[TODO]
+
+### iOS
+
+Refer to the following guide to configure your development environment: [Multiplatform Mobile Setup Guide](https://kotlinlang.org/docs/multiplatform-mobile-setup.html).
+
+The application has been tested with the following software versions:
+
+* ZuluJDK 17.0.8. Acquire the latest version of Zulu JDK [here](https://www.azul.com/downloads/).
+* Xcode 14.3.1. Download Xcode from the [App Store](https://apps.apple.com/us/app/xcode/id497799835). Alternatively, you can use third-party tools such as [Xcode Releases](https://xcodereleases.com/) or [xcodes](https://github.com/XcodesOrg/xcodes).
+
+To start, open the `iosApp` project in Xcode and try a build. You'll find the module located within the `shared` module. Don't hesitate to create new issue if you have problem with building the project.
