@@ -56,15 +56,21 @@ Its behavior is consistent with `refreshCurrencies()`: it returns nothing on suc
 
 ## Building
 
+Refer to the following guide to configure your development environment: [Multiplatform Mobile Setup Guide](https://kotlinlang.org/docs/multiplatform-mobile-setup.html).
+
 ### Android
 
-[TODO]
+When building the Android project, Xcode isn't necessary. Thus, if you're using a non-MacOS machine, you can bypass the Xcode requirement.
+
+The project has been tested with the following software versions: 
+* Android Studio Giraffe | 2022.3.1. Download Android Studio from the [Android Studio website](https://developer.android.com/studio), or use [JetBrains Toolbox](https://www.jetbrains.com/toolbox-app/).
+* Kotlin Multiplatform Mobile plugin, plugin can be found within the plugin tab in Android Studio, or get it from [the JetBrains plugins site](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform-mobile).
+
+To begin, launch the root project and run the `androidApp` module. If you encounter issues during the build process, please create a new issue for assistance.
 
 ### iOS
 
-Refer to the following guide to configure your development environment: [Multiplatform Mobile Setup Guide](https://kotlinlang.org/docs/multiplatform-mobile-setup.html).
-
-The application has been tested with the following software versions:
+The project has been tested with the following software versions:
 
 * ZuluJDK 17.0.8. Acquire the latest version of Zulu JDK [here](https://www.azul.com/downloads/).
 * Xcode 14.3.1. Download Xcode from the [App Store](https://apps.apple.com/us/app/xcode/id497799835). Alternatively, you can use third-party tools such as [Xcode Releases](https://xcodereleases.com/) or [xcodes](https://github.com/XcodesOrg/xcodes).
