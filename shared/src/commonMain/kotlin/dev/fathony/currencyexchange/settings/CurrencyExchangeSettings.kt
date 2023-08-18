@@ -4,6 +4,7 @@ import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set
 import kotlinx.datetime.Instant
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -11,42 +12,26 @@ internal class CurrencyExchangeSettings(private val settings: Settings) {
 
     private val json: Json = Json
 
-    fun setLastFetchGetCountries(time: Instant) {
+    fun setLastFetchGetCurrencies(time: Instant) {
         settings[LastFetchGetCurrencies] = json.encodeToString(time)
     }
 
-    fun getLastFetchGetCountries(): Instant? {
+    fun getLastFetchGetCurrencies(): Instant? {
         val lastFetch: String? = settings[LastFetchGetCurrencies]
         return lastFetch?.let { json.decodeFromString(it) }
     }
 
-    fun setPreferredCountryCodeSource(countryCode: String) {
-        settings[PreferredCurrencySource] = countryCode
+    fun setSavedCurrencies(savedCurrencies: SavedCurrencies) {
+        settings[SavedCurrencies] = json.encodeToString(savedCurrencies)
     }
 
-    fun getPreferredCountryCodeSource(countryCode: String): String? {
-        return settings[PreferredCurrencySource]
-    }
-
-    fun removePreferredCountryCodeSource() {
-        settings.remove(PreferredCurrencySource)
-    }
-
-    fun setPreferredCountryCodeTarget(countryCode: String) {
-        settings[PreferredCurrencyTarget] = countryCode
-    }
-
-    fun getPreferredCountryCodeTarget(): String? {
-        return settings[PreferredCurrencyTarget]
-    }
-
-    fun removePreferredCountryCodeTarget() {
-        settings.remove(PreferredCurrencyTarget)
+    fun getSavedCurrencies(): SavedCurrencies? {
+        val savedCurrencies: String? = settings[SavedCurrencies]
+        return savedCurrencies?.let { json.decodeFromString(savedCurrencies) }
     }
 
     private companion object {
         const val LastFetchGetCurrencies = "LastFetchGetCurrencies"
-        const val PreferredCurrencySource = "PreferredCurrencySource"
-        const val PreferredCurrencyTarget = "PreferredCurrencyTarget"
+        const val SavedCurrencies = "SavedCurrencies"
     }
 }

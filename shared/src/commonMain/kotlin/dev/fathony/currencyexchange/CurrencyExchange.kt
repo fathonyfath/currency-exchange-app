@@ -9,6 +9,7 @@ import com.github.michaelbull.result.get
 import com.github.michaelbull.result.map
 import com.github.michaelbull.result.onFailure
 import com.github.michaelbull.result.onSuccess
+import com.github.michaelbull.result.runCatching
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.fathony.currencyexchange.api.CurrencyExchangeApi
 import dev.fathony.currencyexchange.db.CurrencyExchangeDatabase
@@ -31,6 +32,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import dev.fathony.currencyexchange.settings.SavedCurrencies as InternalSavedCurrencies
 
 class CurrencyExchange(dependencies: PlatformDependencies) {
 
@@ -70,7 +72,7 @@ class CurrencyExchange(dependencies: PlatformDependencies) {
                         database.updateCurrencies(
                             currenciesResult.value.map { DbCurrency(it.code, it.name) }
                         ).onSuccess {
-                            settings.setLastFetchGetCountries(timeProvider.provideCurrentTime())
+                            settings.setLastFetchGetCurrencies(timeProvider.provideCurrentTime())
                         }.onFailure {
                             cache.putCurrencies(Currencies(currenciesResult.value))
                         }
@@ -95,7 +97,7 @@ class CurrencyExchange(dependencies: PlatformDependencies) {
                 database.updateCurrencies(
                     currencies.map { DbCurrency(it.code, it.name) }
                 ).onSuccess {
-                    settings.setLastFetchGetCountries(timeProvider.provideCurrentTime())
+                    settings.setLastFetchGetCurrencies(timeProvider.provideCurrentTime())
                 }.onFailure {
                     cache.putCurrencies(Currencies(currencies))
                 }
@@ -307,8 +309,33 @@ class CurrencyExchange(dependencies: PlatformDependencies) {
                 .flatMap { Ok(Unit) }
         }
 
+    suspend fun getSavedCurrencies(): Result<SavedCurrencies, NoCachedDataException> =
+        withContext(Dispatchers.Default) {
+            val savedCurrencies = settings.getSavedCurrencies()
+                ?: return@withContext Err(NoCachedDataException())
+            val currencies = cache.getCurrencies().first().associateBy { it.code }
+            val sourceCurrency = savedCurrencies.sourceCurrencyCode?.let { currencies[it] }
+            val targetCurrency = savedCurrencies.targetCurrencyCode?.let { currencies[it] }
+
+            return@withContext Ok(
+                SavedCurrencies(
+                    source = sourceCurrency,
+                    target = targetCurrency
+                )
+            )
+        }
+
+    suspend fun setSavedCurrencies(
+        source: Currency,
+        target: Currency
+    ): Result<Unit, Throwable> = withContext(Dispatchers.IO) {
+        return@withContext runCatching {
+            settings.setSavedCurrencies(InternalSavedCurrencies(source.code, target.code))
+        }
+    }
+
     private suspend fun haveToRefreshCurrencies(): Boolean = withContext(Dispatchers.Default) {
-        val lastFetchCurrencies = settings.getLastFetchGetCountries() ?: return@withContext true
+        val lastFetchCurrencies = settings.getLastFetchGetCurrencies() ?: return@withContext true
         val duration = timeProvider.provideCurrentTime().minus(lastFetchCurrencies)
         return@withContext duration.inWholeDays >= 1
     }
