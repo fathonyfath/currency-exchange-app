@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "dev.fathony.currencyexchange.android"
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         applicationId = "dev.fathony.currencyexchange.android"
         minSdk = 21

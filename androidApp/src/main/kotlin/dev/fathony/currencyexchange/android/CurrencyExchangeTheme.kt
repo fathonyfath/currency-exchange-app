@@ -20,16 +20,16 @@ fun CurrencyExchangeTheme(
 ) {
     val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val colorScheme = when {
-        dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
-        dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
+//        dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
+//        dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
         darkTheme -> darkColorScheme(
-            primary = Color(0xFFBB86FC),
+            primary = Color(0xFF9C27B0),
             secondary = Color(0xFF03DAC5)
         )
 
         else -> lightColorScheme(
             primary = Color(0xFF6200EE),
-            secondary = Color(0xFF03DAC5)
+            secondary = Color(0xFF03DAC5),
         )
     }
     val shapes = Shapes()
